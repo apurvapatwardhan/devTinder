@@ -1,7 +1,9 @@
 
 
 const {Schema, model} = require("mongoose");
-const validator = require('validator')
+const validator = require('validator');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
 
 const userSchema = new Schema({
@@ -14,7 +16,8 @@ const userSchema = new Schema({
     lastName: {
         type: String,
         maxLength: 20,
-        minLength: 1
+        minLength: 1,
+        required: true
     },
     email: {
         type: String,
@@ -31,7 +34,6 @@ const userSchema = new Schema({
     password: {
         type: String,
         required: true,
-        maxLength: 40,
         validate: {
             validator: (value) => validator.isStrongPassword(value),
             message: "Enter a String password!!"
@@ -75,7 +77,27 @@ const userSchema = new Schema({
             message: (props) => `Maximum skills can be 10`
         }
     }
-}, {timestamps: true})
+}, {timestamps: true});
+
+
+userSchema.methods.getJwt = async function() {
+    const user = this;
+    const userId = user._id;
+    const token = await jwt.sign({id: userId}, 'Secretfdlkjnsdjkfncd');
+    return token;
+}
+
+userSchema.methods.isCorrectPassword = async function(password) {
+    const user = this;
+    const passwordHash = user.password
+    return bcrypt.compare(password, passwordHash);
+}
+
+userSchema.methods.toSafeObject = async function() {
+    const user = this;
+    const {password, ...safeUser} = user.toObject();
+    return safeUser;
+}
 
 const User = model("User", userSchema);
 
