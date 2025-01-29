@@ -1,5 +1,7 @@
 const validator = require("validator");
 
+const allowedRequestStatus = ["interested", "ignored"];;
+
 const validatorForEachDocumentField = {
   email: (email) => {
     const isAllowedLength = email.length <= 25;
@@ -120,9 +122,16 @@ const validatePasswordData = (req) => {
   validatorForEachDocumentField['password'](password);
 };
 
+const validateSendRequestStatus = (status) => {
+  if(!allowedRequestStatus.includes(status)) {
+    throw new Error("Invalid Status type")
+  }
+}
+
 module.exports = {
   validateSignupData,
   validateLoginData,
   validateProfileEdit,
   validatePasswordData,
+  validateSendRequestStatus
 };

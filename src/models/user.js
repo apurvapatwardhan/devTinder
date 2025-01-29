@@ -46,14 +46,9 @@ const userSchema = new Schema({
     },
     gender: {
         type: String,
-        validate: {
-            validator: (value) => {
-                if(!['male', 'female', 'other'].includes(value)) {
-                    return false
-                }
-                return true
-            },
-            message: (props) => `${props.value} should be either male or female`
+        enum : {
+            values: ["male", "female"],
+            message: `{VALUE} is not a valid gender type`
         }
     },
     photoUrl: {
