@@ -79,6 +79,10 @@ const userSchema = new Schema({
     }
 }, {timestamps: true});
 
+userSchema.methods.setPassword = async function(password) {
+    const hashedPassword = await bcrypt.hash(password, 12);
+    this.password = hashedPassword;
+}
 
 userSchema.methods.getJwt = async function() {
     const user = this;
