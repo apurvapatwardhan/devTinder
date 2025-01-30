@@ -26,6 +26,14 @@ const connectionRequestSchema = new Schema(
   }
 );
 
+connectionRequestSchema.pre('save', function(next) {
+  const connectionRequest = this;
+  if(connectionRequest.fromUserId.equals(connectionRequest.toUserId)) {
+    throw new Error("Cant send connection request to yourself")
+  }
+  next();
+})
+
 const ConnectionRequest = model("ConnectionRequest", connectionRequestSchema);
 
 module.exports = ConnectionRequest;

@@ -17,12 +17,6 @@ connectionRequestRouter.post(
 
       validateSendRequestStatus(status);
 
-      //check if connection request being sent to same user
-      const isSameToUser = fromUserId === toUserId;
-      if(isSameToUser) {
-        throw new Error("Request cant be sent to yourself")
-      }
-
       //check if the other person exists
       const toUserExists = await User.findById(toUserId);
       console.log(toUserExists);

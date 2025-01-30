@@ -98,6 +98,8 @@ userSchema.methods.toSafeObject = async function() {
     return safeUser;
 }
 
+userSchema.index({firstName: 1, lastName : 1});
+
 const User = model("User", userSchema);
 
 module.exports = User;
